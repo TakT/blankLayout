@@ -30,12 +30,12 @@ module.exports = function(grunt) {
 
 		browserSync: {
 			bsFiles: {
-				src: ['src/assets/less/*.less', 'src/*.html', ],
+				src: ['src/assets/less/*.less', 'src/assets/js/*.less', 'src/*.html'],
 			},
 			options: {
 				watchTask: true,
 				reloadDelay: 300,
-				proxy: 'projects/e-produce/shipilov/eukanub/src/',
+				proxy: 'projects/e-produce/shipilov/test/build/',
 			}
 		},
 
@@ -45,17 +45,28 @@ module.exports = function(grunt) {
 					// Task-specific options go here.
 				},
 				// Files to perform replacements and includes with
-				src: 'src/parts/*.html',
+				src: './src/*.html',
 				// Destination directory to copy files to
-				dest: 'src/'
+				dest: './build/',
+				expand: true,
 			},
 			development: {
 				files: [{
-					src: ['parts/*.html'],
-					dest: './',
-					expand: true
+					cwd: 'src/',
+					src: ['*.html'],
+					dest: 'build/',
+					expand: true,
 				}]
 			},
+		},
+
+		copy: {
+			files: {
+				cwd: 'src/', // set working folder / root to copy
+				src: '**/assets/**', // copy all files and subfolders
+				dest: 'build/', // destination folder
+				expand: true, // required when using cwd
+			}
 		},
 
 		watch: {
@@ -83,12 +94,12 @@ module.exports = function(grunt) {
 		},
 	});
 
+	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-less');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-browser-sync');
-	// grunt.loadNpmTasks('grunt-include-replace');
+	grunt.loadNpmTasks('grunt-include-replace');
 
 	// Default task(s).
-	grunt.registerTask('default', ['less', 'browserSync', 'watch']);
-
+	grunt.registerTask('default', ['less:dev', 'copy', 'includereplace:development', 'browserSync', 'watch']);
 };
