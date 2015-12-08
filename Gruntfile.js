@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 					optimization: true,
 				},
 				files: {
-					'src/assets/css/styles.css': ['src/assets/less/icons.less', 'src/assets/less/styles.less'],
+					'build/assets/css/styles.css': ['src/assets/less/icons.less', 'src/assets/less/styles.less'],
 					// 'src/*.html': ['build/*.html'],
 				},
 			},
@@ -30,12 +30,12 @@ module.exports = function(grunt) {
 
 		browserSync: {
 			bsFiles: {
-				src: ['src/assets/less/*.less', 'src/assets/js/*.less', 'src/*.html'],
+				src: ['src/assets/less/*.less', 'src/assets/js/*.js', 'src/*.html', 'src/parts/*.html'],
 			},
 			options: {
 				watchTask: true,
 				reloadDelay: 300,
-				proxy: 'projects/e-produce/shipilov/test/build/',
+				proxy: 'projects/e-produce/shipilov/warner-films/build/',
 			}
 		},
 
@@ -78,7 +78,8 @@ module.exports = function(grunt) {
 			scripts: {
 				files: [
 					'src/assets/js/*.js'
-				]
+				],
+				tasks: ['copy'],
 			},
 
 			styles: {
@@ -90,7 +91,8 @@ module.exports = function(grunt) {
 					'less:dev'
 				]
 			},
-			tasks: ['less', ],
+			files: ['src/**'],
+			tasks: ['includereplace:development', 'copy'],
 		},
 	});
 
@@ -101,5 +103,5 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-include-replace');
 
 	// Default task(s).
-	grunt.registerTask('default', ['less:dev', 'copy', 'includereplace:development', 'browserSync', 'watch']);
+	grunt.registerTask('default', ['less:dev', 'includereplace:development', 'copy', 'browserSync', 'watch']);
 };
